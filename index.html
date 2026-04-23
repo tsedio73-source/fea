@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <title>Click to Copy</title>
+    <style>
+        .copy-text {
+            cursor: pointer;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border: 1px dashed #ccc;
+            display: inline-block;
+        }
+        .copy-text:hover {
+            background-color: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+
+    <h3>AI Prompt for Research News Articles</h3>
+
+    <p class="copy-text" id="myPara" >
+        Give 7 different news articles for students, each with a short headline and one paragraph of about 100 words.  
+Use simple English, different topics, original content, and provide one relevant image link for each article that students can download.
+    </p>
+<center><button onclick="copyAndAlert()">Copy Promt</button></center>
+    <script>
+        function copyAndAlert() {
+            // 1. Text ko select karein
+            const textToCopy = document.getElementById("myPara").innerText;
+
+            // 2. Clipboard mein copy karein
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                // 3. Alert message dikhayein
+                alert("Paragraph copy ho gaya hai!");
+            }).catch(err => {
+                console.error("Copy fail ho gaya: ", err);
+            });
+        }
+    </script>
+
+</body>
+</html>
