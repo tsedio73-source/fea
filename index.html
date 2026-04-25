@@ -1,44 +1,178 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-    <meta charset="UTF-8">
-    <title>Click to Copy</title>
-    <style>
-        .copy-text {
-            cursor: pointer;
-            padding: 10px;
-            background-color: #f0f0f0;
-            border: 1px dashed #ccc;
-            display: inline-block;
-        }
-        .copy-text:hover {
-            background-color: #e0e0e0;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FEA Feedback – T.A. Rating</title>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;800&family=Hind:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --saffron: #FF6B00; --saffron-light: #FF8C38;
+      --green: #138808; --navy: #0A1628;
+      --cream: #FFF8F0; --gold: #FFD700;
+      --shadow: 0 8px 40px rgba(10,22,40,0.13);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Hind', sans-serif; background: var(--cream); min-height: 100vh; overflow-x: hidden; }
+
+    header { background: linear-gradient(135deg, var(--navy) 0%, #1a2e4a 100%); color: white; position: relative; overflow: hidden; }
+    header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: linear-gradient(90deg, var(--saffron) 33%, white 33% 66%, var(--green) 66%); }
+    .header-inner { max-width: 760px; margin: 0 auto; padding: 36px 24px 28px; text-align: center; position: relative; z-index: 1; }
+    .fea-badge { display: inline-block; background: linear-gradient(135deg, var(--saffron), var(--saffron-light)); color: white; font-family: 'Baloo 2', cursive; font-weight: 800; font-size: 0.78rem; letter-spacing: 2px; padding: 4px 14px; border-radius: 20px; margin-bottom: 14px; text-transform: uppercase; }
+    header h1 { font-family: 'Baloo 2', cursive; font-size: clamp(1.7rem,5vw,2.4rem); font-weight: 800; line-height: 1.2; margin-bottom: 8px; }
+    header h1 span { color: var(--saffron-light); }
+    header p { font-size: 1rem; opacity: 0.78; line-height: 1.6; }
+    .ta-name { display: inline-block; margin-top: 14px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 30px; padding: 6px 20px; font-family: 'Baloo 2', cursive; font-size: 1rem; font-weight: 600; color: var(--gold); }
+
+    main { max-width: 520px; margin: -18px auto 0; padding: 0 16px 60px; position: relative; z-index: 2; }
+    .card { background: white; border-radius: 20px; box-shadow: var(--shadow); padding: 34px 32px; margin-bottom: 20px; animation: slideUp 0.5s ease both; }
+    @keyframes slideUp { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:translateY(0); } }
+    .card h2 { font-family: 'Baloo 2', cursive; font-size: 1.2rem; font-weight: 700; color: var(--navy); margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+
+    label { display: block; font-size: 0.88rem; font-weight: 600; color: #444; margin-bottom: 6px; }
+    input[type="text"], textarea { width: 100%; padding: 12px 16px; border: 2px solid #e8e0d8; border-radius: 10px; font-family: 'Hind', sans-serif; font-size: 1rem; color: var(--navy); transition: border-color 0.25s, box-shadow 0.25s; outline: none; background: #fafafa; }
+    input[type="text"]:focus, textarea:focus { border-color: var(--saffron); box-shadow: 0 0 0 3px rgba(255,107,0,0.12); background: white; }
+    textarea { resize: vertical; min-height: 90px; }
+    .form-group { margin-bottom: 20px; }
+
+    .star-section { text-align: center; }
+    .stars-container { display: flex; justify-content: center; gap: 10px; margin: 16px 0 10px; flex-direction: row-reverse; }
+    .stars-container input { display: none; }
+    .stars-container label { font-size: 2.6rem; cursor: pointer; color: #d5ccc4; transition: color 0.15s, transform 0.15s; margin: 0; line-height: 1; user-select: none; }
+    .stars-container input:checked ~ label,
+    .stars-container label:hover,
+    .stars-container label:hover ~ label { color: var(--gold); transform: scale(1.15); }
+    .star-label { font-size: 0.92rem; color: #888; min-height: 22px; }
+    #starValue { font-family: 'Baloo 2', cursive; font-weight: 700; font-size: 1rem; color: var(--saffron); }
+
+    .btn-submit { width: 100%; padding: 15px; background: linear-gradient(135deg, var(--saffron) 0%, #e05c00 100%); color: white; border: none; border-radius: 12px; font-family: 'Baloo 2', cursive; font-size: 1.15rem; font-weight: 700; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s; box-shadow: 0 4px 18px rgba(255,107,0,0.35); letter-spacing: 0.5px; }
+    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,107,0,0.45); }
+    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+    #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(120px); color: white; padding: 14px 28px; border-radius: 40px; font-family: 'Baloo 2', cursive; font-size: 1rem; font-weight: 600; box-shadow: 0 6px 24px rgba(0,0,0,0.2); transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1); z-index: 999; white-space: nowrap; background: var(--green); }
+    #toast.show { transform: translateX(-50%) translateY(0); }
+    #toast.err  { background: #c0392b; }
+
+    .admin-link { text-align: center; margin-top: 4px; padding-bottom: 10px; }
+    .admin-link a { color: #ccc; font-size: 0.75rem; text-decoration: none; letter-spacing: 1px; }
+    .admin-link a:hover { color: var(--saffron); }
+    footer { text-align: center; padding: 20px; font-size: 0.8rem; color: #bbb; }
+    @media (max-width: 480px) { .card { padding: 22px 16px; } .stars-container label { font-size: 2rem; } }
+  </style>
 </head>
 <body>
 
-    <h3>AI Prompt for Research News Articles</h3>
+<header>
+  <div class="header-inner">
+    <div class="fea-badge">🎓 Freedom Employability Academy</div>
+    <h1>Teaching Assistant <span>Feedback</span></h1>
+    <p>Your honest feedback helps us improve.<br>Be sure to share your experience! 🙏</p>
+    <div class="ta-name">📚 T.A. — 6 Days of Class Feedback</div>
+  </div>
+</header>
 
-    <p class="copy-text" id="myPara" >
-        Give 7 different news articles for students, each with a short headline and one paragraph of about 100 words.  
-Use simple English, different topics, original content, and provide one relevant image link for each article that students can download.
-    </p>
-<center><button onclick="copyAndAlert()">Copy Promt</button></center>
-    <script>
-        function copyAndAlert() {
-            // 1. Text ko select karein
-            const textToCopy = document.getElementById("myPara").innerText;
+<main>
+  <div class="card">
+    <h2>✍️ Give your feedback</h2>
 
-            // 2. Clipboard mein copy karein
-            navigator.clipboard.writeText(textToCopy).then(() => {
-                // 3. Alert message dikhayein
-                alert("Paragraph copy ho gaya hai!");
-            }).catch(err => {
-                console.error("Copy fail ho gaya: ", err);
-            });
-        }
-    </script>
+    <div class="form-group">
+      <label for="studentName">Your Name *</label>
+      <input type="text" id="studentName" placeholder="Enter your name" autocomplete="off"/>
+    </div>
 
+    <div class="form-group">
+      <label for="comments">Comment / Sujhaav (optional)</label>
+      <textarea id="comments" placeholder="Apna anubhav likhein, kya acha laga, kya improve hona chahiye..."></textarea>
+    </div>
+
+    <div class="form-group star-section">
+      <label>Give Rating *</label>
+      <div class="stars-container">
+        <input type="radio" name="rating" id="s5" value="5"/><label for="s5">★</label>
+        <input type="radio" name="rating" id="s4" value="4"/><label for="s4">★</label>
+        <input type="radio" name="rating" id="s3" value="3"/><label for="s3">★</label>
+        <input type="radio" name="rating" id="s2" value="2"/><label for="s2">★</label>
+        <input type="radio" name="rating" id="s1" value="1"/><label for="s1">★</label>
+      </div>
+      <div class="star-label"><span id="starValue">☝️ Stars select karein</span></div>
+    </div>
+
+    <button class="btn-submit" id="submitBtn" onclick="submitFeedback()">⭐ Submit Feedback</button>
+  </div>
+</main>
+
+<div class="admin-link"><a href="admin.html">🔐 Admin Panel</a></div>
+<div id="toast"></div>
+<footer>FEA – Freedom Employability Academy &nbsp;|&nbsp; T.A. Feedback Portal</footer>
+
+<script>
+  // Firebase Realtime Database REST API (SDK se fast, koi import nahi)
+  const DB = "https://e-fee-ae5c8-default-rtdb.firebaseio.com";
+
+  const ratingLabels = {
+    1:'⭐ 1 – Improvement necessary',
+    2:'⭐⭐ 2 – Needs more effort',
+    3:'⭐⭐⭐ 3 – OK',
+    4:'⭐⭐⭐⭐ 4 – Very Good',
+    5:'⭐⭐⭐⭐⭐ 5 – Excellent!'
+  };
+
+  document.querySelectorAll('input[name="rating"]').forEach(r => {
+    r.addEventListener('change', () => {
+      document.getElementById('starValue').textContent = ratingLabels[r.value];
+    });
+  });
+
+  async function submitFeedback() {
+    const name     = document.getElementById('studentName').value.trim();
+    const ratingEl = document.querySelector('input[name="rating"]:checked');
+    const comment  = document.getElementById('comments').value.trim();
+
+    if (!name)     { showToast('⚠️ Please write your name.', true); return; }
+    if (!ratingEl) { showToast('⚠️ Please select stars.', true); return; }
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = '⏳ Submitting...';
+
+    const entry = {
+      name,
+      rating:    parseInt(ratingEl.value),
+      comment:   comment || '',
+      time:      new Date().toLocaleString('en-IN', { dateStyle:'short', timeStyle:'short' }),
+      timestamp: Date.now()
+    };
+
+    try {
+      const res = await fetch(`${DB}/feedbacks.json`, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(entry)
+      });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+
+      // Reset form
+      document.getElementById('studentName').value = '';
+      document.querySelectorAll('input[name="rating"]').forEach(r => r.checked = false);
+      document.getElementById('comments').value = '';
+      document.getElementById('starValue').textContent = '☝️ Stars select karein';
+      showToast('✅ Feedback submit ho gaya! Shukriya 🙏');
+    } catch(e) {
+      console.error(e);
+      showToast('❌ Error aaya. Dobara try karein.', true);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '⭐ Submit Feedback';
+    }
+  }
+
+  function showToast(msg, isErr = false) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.toggle('err', isErr);
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3200);
+  }
+</script>
 </body>
 </html>
